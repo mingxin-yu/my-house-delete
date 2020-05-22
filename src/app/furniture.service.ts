@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Furniture } from './furniture';
-
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 import { catchError, map, tap } from 'rxjs/operators';
 
 
@@ -14,18 +11,18 @@ import { catchError, map, tap } from 'rxjs/operators';
 })
 
 export class FurnitureService {
-
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
-
   private furnituresUrl = 'api/furnitures';  // URL to web api
-
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
   private log(message: string) {
     this.messageService.add(`FurnitureService: ${message}`);
   }
 
-  /** GET heroes from the server */
+  /** GET furnitures from the server */
   getFurnitures(): Observable<Furniture[]> {
     return this.http.get<Furniture[]>(this.furnituresUrl)
       .pipe(
@@ -34,7 +31,7 @@ export class FurnitureService {
       );
   }
 
-  /** GET hero by id. Will 404 if id not found */
+  /** GET furniture by id. Will 404 if id not found */
   getFurniture(id: number): Observable<Furniture> {
     const url = `${this.furnituresUrl}/${id}`;
     return this.http.get<Furniture>(url).pipe(
@@ -43,7 +40,7 @@ export class FurnitureService {
     );
   }
 
-  /** PUT: update the hero on the server */
+  /** PUT: update the furniture on the server */
   updateFurniture(furniture: Furniture): Observable<any> {
     return this.http.put(this.furnituresUrl, furniture, this.httpOptions).pipe(
       tap(_ => this.log(`updated furniture id=${furniture.id}`)),
@@ -51,29 +48,24 @@ export class FurnitureService {
     );
   }
 
-  /** POST: add a new hero to the server */
+  /** POST: add a new furniture to the server */
   addFurniture(furniture: Furniture): Observable<Furniture> {
     return this.http.post<Furniture>(this.furnituresUrl, furniture, this.httpOptions).pipe(
-      tap((newFurniture: Furniture) => this.log(`added hero w/ id=${newFurniture.id}`)),
-      catchError(this.handleError<Furniture>('addHero'))
+      tap((newFurniture: Furniture) => this.log(`added furniture w/ id=${newFurniture.id}`)),
+      catchError(this.handleError<Furniture>('addFurniture'))
     );
   }
 
-  /** DELETE: delete the hero from the server */
+  /** DELETE: delete the furniture from the server */
   deleteFurniture(furniture: Furniture | number): Observable<Furniture> {
     const id = typeof furniture === 'number' ? furniture : furniture.id;
     const url = `${this.furnituresUrl}/${id}`;
 
     return this.http.delete<Furniture>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted hero id=${id}`)),
-      catchError(this.handleError<Furniture>('deleteHero'))
+      tap(_ => this.log(`deleted furniture id=${id}`)),
+      catchError(this.handleError<Furniture>('deleteFurniture'))
     );
   }
-
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
 
   /**
    * Handle Http operation that failed.
@@ -83,16 +75,12 @@ export class FurnitureService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
-
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
-
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
   }
-
 }

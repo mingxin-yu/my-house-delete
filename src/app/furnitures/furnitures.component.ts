@@ -10,11 +10,8 @@ import { MessageService } from '../message.service';
 })
 
 export class FurnituresComponent implements OnInit {
-
   selectedFurniture: Furniture;
-
   furnitures: Furniture[];
-
   constructor(private furnitureService: FurnitureService, private messageService: MessageService) { }
 
   ngOnInit(): void {

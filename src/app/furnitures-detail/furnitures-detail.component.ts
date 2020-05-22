@@ -1,6 +1,5 @@
 import { Component, OnInit, Input} from '@angular/core';
 import { Furniture } from '../furniture';
-
 import { FurnitureService } from '../furniture.service';
 
 @Component({
