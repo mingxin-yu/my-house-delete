@@ -1,0 +1,23 @@
+<h2>Furniture：</h2>
+
+<ul class="furnitures">
+  <li *ngFor="let furniture of furnitures"
+      [class.selected]="furniture === selectedFurniture"
+      (click)="onSelect(furniture)">
+    <a><span class="badge">{{furniture.id}}</span> {{furniture.name}}</a>
+    <button class="delete" title="delete furniture"
+            (click)="delete(furniture)">x</button>
+  </li>
+</ul>
+
+
+<div>
+  <label>Furniture name:
+    <input #FurnitureName />
+  </label>
+  <button (click)="add(FurnitureName.value); FurnitureName.value=''">
+    add
+  </button>
+</div>
+
+<app-furnitures-detail [furniture]="selectedFurniture"></app-furnitures-detail>
